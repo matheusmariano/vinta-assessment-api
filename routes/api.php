@@ -20,3 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('users')->group(function () {
     Route::post('/', 'UsersController@signIn');
 });
+
+Route::prefix('repositories')->group(function () {
+    Route::get('/', 'RepositoriesController@index');
+    Route::get('commits', 'RepositoriesController@commits');
+    Route::get('{username}/{repository}/commits', 'RepositoriesController@repositoryCommits');
+});

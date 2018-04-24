@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UsersController extends Controller
 {
@@ -15,17 +16,21 @@ class UsersController extends Controller
 
         $user = User::findByGithubId($profile->getId());
 
-        if ($user->exists()) {
-            return response()->json($user, 200);
+        $code = 200;
+
+        if (!$user->exists()) {
+            $user = User::create([
+                'name' => $profile->getName(),
+                'email' => $profile->getEmail(),
+                'provider' => 'github',
+                'provider_id' => $profile->getId(),
+            ]);
+
+            $code = 201;
         }
 
-        $user = User::create([
-            'name' => $profile->getName(),
-            'email' => $profile->getEmail(),
-            'provider' => 'github',
-            'provider_id' => $profile->getId(),
-        ]);
+        $user->api_token = JWTAuth::fromUser($user);
 
-        return response()->json($user, 201);
+        return response()->json($user, $code);
     }
 }
