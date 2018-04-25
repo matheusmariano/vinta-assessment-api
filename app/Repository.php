@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Repository extends Model
 {
+    protected $fillable = ['name'];
+
     public function user()
     {
         return $this->belongsTo(User::class);

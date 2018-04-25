@@ -24,5 +24,6 @@ Route::prefix('users')->group(function () {
 Route::prefix('repositories')->group(function () {
     Route::get('/', 'RepositoriesController@index');
     Route::get('commits', 'RepositoriesController@commits');
+    Route::post('{username}/{repository}', 'RepositoriesController@add');
     Route::get('{username}/{repository}/commits', 'RepositoriesController@repositoryCommits');
 });
