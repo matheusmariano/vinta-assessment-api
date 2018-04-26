@@ -19,13 +19,18 @@ class RepositoriesController extends Controller
 
     public function index(Request $request)
     {
-        return response()->json($this->user->repositories);
+        return response()->json(
+            $this->user->repositories()
+                ->orderBy('created_at', 'desc')
+                ->get()
+        );
     }
 
     public function commits()
     {
         $commits = $this->user->commits()
             ->latest()
+            ->orderBy('timestamp', 'desc')
             ->get();
 
         return response()->json($commits);
@@ -37,6 +42,7 @@ class RepositoriesController extends Controller
             ->findByName($username . '/' . $repository)
             ->commits()
             ->latest()
+            ->orderBy('timestamp', 'desc')
             ->get();
 
         return response()->json($commits);
